@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dice Roll Probability</title>
+  <style>
+    .dice {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .dice img {
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+    }
+    #probability {
+      margin-top: 20px;
+    }
+    #probability table {
+      border-collapse: collapse;
+    }
+    #probability table, #probability th, #probability td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <button id="rollButton">Roll Dice</button>
+  <div class="dice" id="diceContainer"></div>
+  <div id="probability"></div>
+
+  <script>
+    let diceCounts = [0, 0, 0, 0, 0, 0]; // Array to store the count of each face
+    const totalRolls = 12;
+
+    function start() {
+      const button = document.getElementById("rollButton");
+      button.addEventListener("click", rollDice, false);
+      displayInitialDice();
+      updateFrequencyTable();
+    }
+
+    function displayInitialDice() {
+      const diceImages = Array(totalRolls).fill('die1.png'); // Filling the array with 'die1.png'
+      const diceContainer = document.getElementById('diceContainer');
+      diceContainer.innerHTML = '';
+
+      for (let i = 0; i < totalRolls; i++) {
+        const diceNumber = 1; // Always show die1 initially
+        const diceImage = diceImages[i];
+        setImage(diceNumber, diceImage);
+      }
+    }
+
+    function rollDice() {
+      const diceImages = ['die1.png', 'die2.png', 'die3.png', 'die4.png', 'die5.png', 'die6.png'];
+      const diceContainer = document.getElementById('diceContainer');
+      diceContainer.innerHTML = '';
+
+      // Reset the counts to zeros for a new roll
+      diceCounts = [0, 0, 0, 0, 0, 0];
+
+      for (let i = 0; i < totalRolls; i++) {
+        const randomNumber = Math.floor(Math.random() * 6); // generates a random number from 0 to 5
+        const diceNumber = randomNumber + 1; // adds 1 to match dice numbers
+        const diceImage = diceImages[randomNumber];
+        diceCounts[randomNumber]++;
+
+        setImage(diceNumber, diceImage);
+      }
+
+      updateFrequencyTable();
+    }
+
+    function setImage(dieNumber, diceImage) {
+      const diceContainer = document.getElementById('diceContainer');
+      const diceElement = document.createElement('img');
+      diceElement.src = diceImage;
+      diceElement.alt = `Die ${dieNumber}`;
+      diceContainer.appendChild(diceElement);
+    }
+
+    function updateFrequencyTable() {
+      const probabilityElement = document.getElementById('probability');
+      const probabilities = diceCounts.map(count => ((count / totalRolls) * 100).toFixed(2) + '%');
+
+      const tableContent = `
+        <table>
+          <tr>
+            <th>Face</th>
+            <th>Probability</th>
+          </tr>
+          <tr>
+            <td>Face 1</td>
+            <td>${probabilities[0]}</td>
+          </tr>
+          <tr>
+            <td>Face 2</td>
+            <td>${probabilities[1]}</td>
+          </tr>
+          <tr>
+            <td>Face 3</td>
+            <td>${probabilities[2]}</td>
+          </tr>
+          <tr>
+            <td>Face 4</td>
+            <td>${probabilities[3]}</td>
+          </tr>
+          <tr>
+            <td>Face 5</td>
+            <td>${probabilities[4]}</td>
+          </tr>
+          <tr>
+            <td>Face 6</td>
+            <td>${probabilities[5]}</td>
+          </tr>
+        </table>
+      `;
+      probabilityElement.innerHTML = `<p>Probability of each face:</p>${tableContent}`;
+    }
+
+    window.addEventListener("load", start, false);
+  </script>
+</body>
+</html>
